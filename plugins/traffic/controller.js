@@ -1,6 +1,6 @@
 function Traffic($scope, $http, $interval, $q, TimeboxService) {
 	var BING_MAPS = "http://dev.virtualearth.net/REST/V1/Routes/";
-	var language = (typeof config.general.language !== 'undefined') ? config.general.language.substr(0, 2) : "en"
+	var language = "fr" //(typeof config.general.language !== 'undefined') ? config.general.language.substr(0, 2) : "en"
 	var durationHumanizer = require('humanize-duration').humanizer({
 		language: language,
 		units: ['h', 'm'],

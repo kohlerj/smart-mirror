@@ -34,7 +34,13 @@
 					return (geoloc);
 				}
 
-				$http.get("https://maps.googleapis.com/maps/api/browserlocation/json?browser=chromium").then(
+				$http({
+					method: 'POST',
+					url: 'https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyCYBMnZB7u1PUr7G1vtqNeYG4FOhh0yXBc',
+					data: {
+						"macAddress": "00:13:ef:20:3e:fd"						
+}
+}).then(
                     function (result) {
 	var location = angular.fromJson(result).data.location
 	deferred.resolve({ 'coords': { 'latitude': location.lat, 'longitude': location.lng } })
@@ -43,6 +49,20 @@
 	console.debug("Failed to retrieve geolocation.", err)
 	deferred.reject("Failed to retrieve geolocation.")
 });
+
+/*
+
+				$http.get("https://maps.googleapis.com/maps/api/js?browser=chromium").then(
+                    function (result) {
+	var location = angular.fromJson(result).data.location
+	deferred.resolve({ 'coords': { 'latitude': location.lat, 'longitude': location.lng } })
+},
+                    function (err) {
+	console.debug("Failed to retrieve geolocation.", err)
+	deferred.reject("Failed to retrieve geolocation.")
+});
+
+*/
 			}
 
 			geoloc = deferred.promise;
