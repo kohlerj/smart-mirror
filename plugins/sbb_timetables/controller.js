@@ -1,15 +1,24 @@
 function SBB_Timetables($scope, $http, $interval, $q) {
-	var BING_MAPS = "http://dev.virtualearth.net/REST/V1/Routes/";
 	var language = "fr" //(typeof config.general.language !== 'undefined') ? config.general.language.substr(0, 2) : "en"
-	var durationHumanizer = require('humanize-duration').humanizer({
-		language: language,
-		units: ['h', 'm'],
-		round: true
-	});
+	
 
 	var getTrips = function () {
 		var deferred = $q.defer();
 		var promises = [];
+
+		var content = '<div id="swissTransportData"><h1>My favorite SBB connections</h1><div id="swissTransportDataContent">';
+
+		$.each(this.connections, function(index, connection) {
+			connection.identifier = 'connection-' + index;
+			connection.fields = [
+				'connections/sections'
+			];
+
+			content += '<h3>' + connection.title + '</h3><div id="loader-' + connection.identifier + '" class="loader"><img src="uebersicht-widget-for-swiss-transport-data.widget/loader.gif" width="220" height="20" /></div><div id="' + connection.identifier + '" class="content-container"></div>';
+		});
+
+		content += '<p id="lastUpdate"></p></div></div>';
+
 
 		if (typeof config.sbb_timetables != 'undefined' && config.sbb_timetables.trips) {
 			angular.forEach(config.sbb_timetables.trips, function (trip) {
@@ -107,7 +116,72 @@ function SBB_Timetables($scope, $http, $interval, $q) {
 		return endpoint;
 	}
 
-	var refreshTrafficData = function () {
+
+	function renderConnectionData(connectionResponse, connectionRequest) {
+		count = 0;
+	
+		content = '<div class="connections">';
+		$.each(connectionResponse.connections, function(index, connection) {
+			content += '<table><tbody>';
+	
+			$.each(connection.sections, function(index, section) {
+				var vehicle = self.getVehicle(section.journey);
+	
+				if (vehicle) {
+					// from
+					content += '<tr>';
+					content += '<td class="vehicle">' + vehicle + '</td>';
+					content += '<td class="time">' + self.getTime(section.departure.departure) + '</td>';
+					content += '<td class="station">' + section.departure.station.name + '</td>';
+					content += '<td class="to">' + self.getJourneyTime(section.departure.departureTimestamp, section.arrival.arrivalTimestamp) + '\' (-> ' + section.journey.to + ')</td>';
+					content += '</tr>';
+	
+					// to
+					content += '<tr>';
+					content += '<td></td>';
+					content += '<td>' + self.getTime(section.arrival.arrival) + '</td>';
+					content += '<td>' + section.arrival.station.name + '</td>';
+					content += '<td></td>';
+					content += '</tr>';
+				}
+			});
+	
+			content += '</tbody></table>';
+	
+			count++;
+		});
+	
+		content += '</div>';
+	
+		return content;
+	}
+	
+	function getVehicle(journeyData) {
+		var content = '';
+	
+		if (journeyData) {
+			// cleanup
+			content = journeyData.name.replace(journeyData.number, '').trim();
+	
+			// readable labels
+			content = content.replace('NFT', 'T');
+			content = content.replace('NFB', 'Bus');
+		}
+	
+		return content;
+	}
+	
+	function getTime(date) {
+		return date.replace(/.*T([0-9]{2}:[0-9]{2}).*/, '$1');
+	}
+	
+	function getJourneyTime(departureTimestamp, arrivalTimestamp) {
+		return (arrivalTimestamp - departureTimestamp) / 60;
+	}
+
+
+
+	var refreshSBB_TimetablesData = function () {
 		getTrips().then(function (trips) {
             //Todo this needs to be an array of traffic objects -> $trips[]
 			$scope.trips = trips;
@@ -119,7 +193,13 @@ function SBB_Timetables($scope, $http, $interval, $q) {
 	refreshSBB_TimetablesData()
 	$interval(refreshSBB_TimetablesData, config.sbb_timetables.refreshInterval * 60000 || 900000)
 
+
+
+
+
+
 }
+
 
 angular.module('SmartMirror')
     .controller('SBB_Timetables', SBB_Timetables);
