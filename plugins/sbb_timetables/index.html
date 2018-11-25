@@ -1,0 +1,8 @@
+<div ng-controller="SBB_Timetables">
+    <div class="sbb_timetables" ng-repeat="sbb timetables for multiple connections">
+        <div ng-show="!sbb_timetables.error" class="sbb_timetables-information">
+            <span class="time-to" ng-bind="'sbb_timetables.time_to' | translate:timetables"></span>
+            <span ng-bind="sbb_timetables.duration"></span>
+        </div>
+    </div>
+</div>
