@@ -34,9 +34,12 @@
 <body ng-controller="MirrorCtrl" ng-cloak>
   <div class="top">
     <div class="top-left">
-      <div ng-include="'plugins/datetime/index.html'"></div>
       <div ng-include="'plugins/calendar/index.html'"></div>
     </div>
+    <div class="top-middle">
+      <div ng-include="'plugins/datetime/index.html'"></div>
+    </div>
+
     <div class="top-right">
       <div ng-include="'plugins/weather/index.html'"></div>
       <div ng-include="'plugins/traffic/index.html'"></div>
