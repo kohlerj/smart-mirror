@@ -60,6 +60,10 @@
   "soundcloud": {
     "key": ""
   },
+  "sbb_timetables": {
+    "refreshInterval": 5,
+    "trips": []
+  },
   "traffic": {
     "key": "",
     "refreshInterval": 5,

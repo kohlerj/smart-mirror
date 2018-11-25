@@ -1,0 +1,68 @@
+{
+    "schema": {
+        "sbb_timetables": {
+            "type": "object",
+            "title": "SBB Timetables Settings",
+            "properties": {
+                "refreshInterval": {
+                    "type": "string",
+                    "title": "Refresh Traffic Interval (minutes)"
+                },
+                "trips": {
+                    "type": "array",
+                    "title": "Trips",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "from": {
+                                "type": "string",
+                                "title": "From"
+                            },
+                            "via": {
+                                "type": "string",
+                                "title": "Via"
+                            },
+                            "to": {
+                                "type": "string",
+                                "title": "To"
+                            },
+                            "name": {
+                                "type": "string",
+                                "title": "Connection Name"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "form":[
+      {
+        "type":"fieldset",
+        "title":"SBB Timetables Settings",
+        "expandable":true,
+        "order":0,
+        "items": [
+          "sbb_timetables.refreshInterval",
+          {
+            "type":"tabarray",
+            "items": [
+              {
+                "type":"section",
+                "legend":"{{value}}",
+                "items": [
+                  {
+                    "key":"sbb_timetables.trips[].name",
+                    "valueInLegend":true
+                  },
+                  "sbb_timetables.trips[].from",
+                  "sbb_timetables.trips[].via",
+                  "sbb_timetables.trips[].to"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+}
